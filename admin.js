@@ -13,8 +13,7 @@ let mockProducts = [
     { id: "mock-1", name: "Chopp Brahma", price: 13.90, description: "O clássico número um.", image_url: "assets/chopp_premium.png", category: "chopps", tags: ["Mais Pedido"], available: true, created_at: new Date() },
     { id: "mock-2", name: "Chopp Pilsen Pantanal", price: 11.90, description: "Direto da torneira!", image_url: "assets/chopp_premium.png", category: "chopps", tags: ["Local"], available: true, created_at: new Date() },
     { id: "mock-3", name: "Batata Palito Crocante", price: 29.90, description: "Porção farta crocante.", image_url: "assets/porcao_batata.png", category: "petiscos", tags: ["Favorito"], available: true, created_at: new Date() },
-    { id: "mock-4", name: "Filé Mignon Acebolado", price: 64.90, description: "Tiras macias aceboladas.", image_url: "assets/porcao_picanha.png", category: "peixes-carnes", tags: ["Nobre"], available: true, created_at: new Date() },
-    { id: "mock-5", name: "Refrigerante Lata", price: 6.50, description: "Refri gelado.", image_url: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&q=80&w=400", category: "bebidas", tags: ["Gelado"], available: true, created_at: new Date() }
+    { id: "mock-4", name: "Filé Mignon Acebolado", price: 64.90, description: "Tiras macias aceboladas.", image_url: "assets/porcao_picanha.png", category: "petiscos", tags: ["Nobre"], available: true, created_at: new Date() }
 ];
 let mockViews = 428;
 let mockViewsToday = 34;
@@ -509,9 +508,7 @@ function getCategoryIcon(category) {
         "cervejas": "🍻",
         "drinks": "🍹",
         "petiscos": "🍟",
-        "peixes-carnes": "🥩",
-        "combos": "🍾",
-        "bebidas": "🥤"
+        "combos": "🍾"
     };
     return icons[category] || "🍽️";
 }
@@ -522,9 +519,7 @@ function getCategoryName(category) {
         "cervejas": "Cervejas",
         "drinks": "Drinks",
         "petiscos": "Porções",
-        "peixes-carnes": "Carnes & Peixes",
-        "combos": "Combos",
-        "bebidas": "Sem Álcool"
+        "combos": "Combos"
     };
     return names[category] || "Outros";
 }
