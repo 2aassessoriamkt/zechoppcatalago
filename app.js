@@ -472,6 +472,7 @@ async function fetchProducts() {
         if (typeof SUPABASE_URL === "undefined" || SUPABASE_URL.includes("seu-projeto") || !supabaseClient) {
             console.log("Supabase não configurado. Utilizando cardápio estático local.");
             products = [...STATIC_PRODUCTS];
+            sortProductsByCategory();
             renderProducts();
             return;
         }
@@ -479,9 +480,7 @@ async function fetchProducts() {
         const { data, error } = await supabaseClient
             .from("produtos")
             .select("*")
-            .eq("available", true)
-            .order("category", { ascending: true })
-            .order("name", { ascending: true });
+            .eq("available", true);
 
         if (error) throw error;
 
@@ -496,17 +495,44 @@ async function fetchProducts() {
                 category: item.category,
                 tags: item.tags || []
             }));
+            
+            sortProductsByCategory();
             console.log(`Carregados ${products.length} produtos ativos do Supabase!`);
         } else {
             console.log("Banco Supabase sem produtos ativos. Usando mock de fallback.");
             products = [...STATIC_PRODUCTS];
+            sortProductsByCategory();
         }
     } catch (err) {
         console.error("Falha ao puxar dados do Supabase. Usando fallback estático local:", err.message);
         products = [...STATIC_PRODUCTS];
+        sortProductsByCategory();
     }
     
     renderProducts();
+}
+
+// Ordenar produtos por categoria (Chopps sempre primeiro)
+function sortProductsByCategory() {
+    const CATEGORY_ORDER = {
+        "chopps": 1,
+        "cervejas": 2,
+        "drinks": 3,
+        "petiscos": 4,
+        "peixes-carnes": 5,
+        "combos": 6,
+        "bebidas": 7
+    };
+    
+    products.sort((a, b) => {
+        const orderA = CATEGORY_ORDER[a.category] || 99;
+        const orderB = CATEGORY_ORDER[b.category] || 99;
+        if (orderA !== orderB) {
+            return orderA - orderB;
+        }
+        // Se for da mesma categoria, ordena alfabeticamente por nome
+        return a.name.localeCompare(b.name, 'pt-BR');
+    });
 }
 
 // --- 5. RENDERIZAÇÃO DOS CARDÁPIOS ---
@@ -544,14 +570,8 @@ function renderProducts() {
         card.className = "product-card";
         card.setAttribute("data-id", product.id);
 
-        let tagsHTML = "";
-        if (product.tags && product.tags.length > 0) {
-            tagsHTML = product.tags.map(tag => `<span class="product-badge">${tag}</span>`).join('');
-        }
-
         card.innerHTML = `
             <div class="product-image-container">
-                ${tagsHTML}
                 <img src="${product.image}" alt="${product.name}" onerror="this.src='https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7?auto=format&fit=crop&q=80&w=400';">
             </div>
             <div class="product-info">
