@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - Zé Chopp</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <!-- Background Glow Elements (Aesthetics Premium) -->
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <!-- 1. PAINEL DE LOGIN (Exibido por padrão) -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-card">
+            <div class="login-header">
+                <img src="assets/logo_ze.png" alt="Logo Zé Chopp" class="login-logo">
+                <h2>Painel do Zé</h2>
+                <p>Entre com suas credenciais de administrador</p>
+            </div>
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="loginEmail">E-mail</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-envelope input-icon"></i>
+                        <input type="email" id="loginEmail" placeholder="admin@zechopp.com.br" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Senha</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <input type="password" id="loginPassword" placeholder="••••••••" required>
+                    </div>
+                </div>
+                <div class="error-message" id="loginError"></div>
+                <button type="submit" class="btn-primary w-full" id="loginSubmitBtn">
+                    Entrar no Painel <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. PAINEL DO DASHBOARD (Oculto por padrão, visível após login) -->
+    <div class="admin-container hidden" id="adminDashboard">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="header-left">
+                <img src="assets/logo_ze.png" alt="Logo Zé Chopp" class="admin-logo">
+                <div class="header-title">
+                    <h1>Painel Administrativo</h1>
+                    <p>Gerencie o cardápio e veja os analytics do Zé Chopp</p>
+                </div>
+            </div>
+            <button class="btn-logout" id="logoutBtn">
+                Sair <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+        </header>
+
+        <!-- Analytics / KPI Grid -->
+        <section class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-icon icon-gold"><i class="fa-solid fa-qrcode"></i></div>
+                <div class="kpi-info">
+                    <span class="kpi-label">Leituras do QR Code (Total)</span>
+                    <h3 class="kpi-value" id="kpiTotalViews">0</h3>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon icon-red"><i class="fa-solid fa-fire"></i></div>
+                <div class="kpi-info">
+                    <span class="kpi-label">Leituras Hoje</span>
+                    <h3 class="kpi-value" id="kpiTodayViews">0</h3>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon icon-green"><i class="fa-solid fa-beer-mug-empty"></i></div>
+                <div class="kpi-info">
+                    <span class="kpi-label">Produtos Ativos</span>
+                    <h3 class="kpi-value" id="kpiActiveProducts">0 / 0</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- Actions & Controls -->
+        <section class="controls-section">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="adminSearchInput" placeholder="Buscar produto por nome ou categoria...">
+            </div>
+            <button class="btn-primary" id="btnOpenAddModal">
+                <i class="fa-solid fa-plus"></i> Adicionar Produto
+            </button>
+        </section>
+
+        <!-- Products Table/Grid -->
+        <main class="products-table-wrapper">
+            <div class="table-header">
+                <h3>Gerenciamento de Itens</h3>
+                <span class="products-count" id="adminProductsCount">0 produtos cadastrados</span>
+            </div>
+            <div class="table-scroll">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Foto</th>
+                            <th>Nome</th>
+                            <th>Categoria</th>
+                            <th>Preço</th>
+                            <th>Tags</th>
+                            <th>Disponível</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminProductsTableBody">
+                        <!-- Linhas geradas via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- 3. MODAL DE ADICIONAR / EDITAR PRODUTO -->
+    <div class="modal-overlay" id="productModalOverlay"></div>
+    <div class="modal" id="productModal">
+        <div class="modal-header">
+            <h3 id="modalTitle">Adicionar Novo Produto</h3>
+            <button class="close-modal-btn" id="btnCloseProductModal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <form id="productForm" class="product-form">
+            <input type="hidden" id="productIdInput">
+            <div class="form-row">
+                <div class="form-group flex-2">
+                    <label for="productName">Nome do Produto *</label>
+                    <input type="text" id="productName" placeholder="Ex: Chopp Brahma Caneca" required>
+                </div>
+                <div class="form-group flex-1">
+                    <label for="productPrice">Preço (R$) *</label>
+                    <input type="number" id="productPrice" placeholder="13.90" step="0.01" min="0" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="productCategory">Categoria *</label>
+                    <select id="productCategory" required>
+                        <option value="chopps">🍺 Chopps</option>
+                        <option value="petiscos">🍟 Porções</option>
+                        <option value="peixes-carnes">🥩 Carnes & Peixes</option>
+                        <option value="drinks">🍹 Drinks</option>
+                        <option value="cervejas">🍻 Cervejas</option>
+                        <option value="combos">🍾 Combos</option>
+                        <option value="bebidas">🥤 Sem Álcool</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="productTags">Tags (Separadas por vírgula)</label>
+                    <input type="text" id="productTags" placeholder="Ex: Mais Pedido, Gelado">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="productImage">URL da Imagem</label>
+                <div class="image-input-wrapper">
+                    <input type="text" id="productImage" placeholder="https://images.unsplash.com/photo-...">
+                    <div class="image-preview-box">
+                        <img id="imagePreview" src="https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7?auto=format&fit=crop&q=80&w=150" alt="Preview">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="productDescription">Descrição Irresistível *</label>
+                <textarea id="productDescription" rows="3" placeholder="Descreva os sabores, ingredientes e frescor do prato..." required></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="btnCancelProductModal">Cancelar</button>
+                <button type="submit" class="btn-primary" id="btnSaveProduct">
+                    Salvar Produto <i class="fa-solid fa-save"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 4. MODAL DE CONFIRMAÇÃO DE EXCLUSÃO -->
+    <div class="modal-overlay" id="deleteModalOverlay"></div>
+    <div class="modal" id="deleteModal" style="max-width: 380px;">
+        <div class="modal-icon text-red" style="font-size: 2.5rem; color: var(--red-alert);"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <h3>Tem certeza absoluta?</h3>
+        <p>Você está prestes a excluir o produto <strong id="deleteProductName">--</strong>. Esta ação não poderá ser desfeita!</p>
+        <div class="delete-modal-actions" style="display: flex; gap: 12px; margin-top: 20px;">
+            <button class="btn-secondary w-full" id="btnCancelDelete">Cancelar</button>
+            <button class="btn-primary w-full" id="btnConfirmDelete" style="background: var(--red-alert); border-color: var(--red-alert); color: #ffffff;">
+                Excluir de Vez
+            </button>
+        </div>
+    </div>
+
+    <!-- JS Scripts -->
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

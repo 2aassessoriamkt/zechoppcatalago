@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zé Chopp - Cardápio Digital & Simulador</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <!-- FontAwesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Background Glow Elements (Aesthetics Premium) -->
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="header-top">
+                <div class="logo-area">
+                    <img src="assets/logo_ze.png" alt="Logo Zé Chopp" class="logo-img">
+                    <div class="logo-text">
+                        <h1>Zé Chopp</h1>
+                        <p class="subtitle font-playfair">Novo Progresso • O clássico no grau</p>
+                    </div>
+                </div>
+            </div>
+            <div class="welcome-message">
+                <h2>Seja bem-vindo! 👋</h2>
+                <p>Navegue pelo cardápio, monte sua simulação para ver quanto vai ficar e peça direto ao garçom.</p>
+            </div>
+            
+            <!-- Banner de Evento Destaque (Churrascada 06/06) -->
+            <div class="event-banner">
+                <div class="event-glow"></div>
+                <div class="event-content">
+                    <span class="event-badge"><i class="fa-solid fa-fire text-gold"></i> EVENTO EXCLUSIVO</span>
+                    <h3 class="event-title">🔥 CHURRASCADA DO ZÉ 🔥</h3>
+                    <p class="event-date"><i class="fa-regular fa-calendar"></i> Sábado, 06/06 • A partir das 12:00h</p>
+                    <p class="event-desc">O melhor churrasco na brasa da região, chopp estupidamente gelado e música ao vivo de primeira. Traga a galera!</p>
+                </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="search-container" style="margin-top: 16px;">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="searchInput" placeholder="O que vai bem hoje? Chopp, filé, combo...">
+            </div>
+        </header>
+
+        <!-- Categories Navigator (Tudo Bem Separado) -->
+        <nav class="categories-nav">
+            <div class="categories-scroll" id="categoriesScroll">
+                <button class="category-btn active" data-category="todos">
+                    <span class="btn-icon">✨</span> Todos
+                </button>
+                <button class="category-btn" data-category="chopps">
+                    <span class="btn-icon">🍺</span> Chopps
+                </button>
+                <button class="category-btn" data-category="petiscos">
+                    <span class="btn-icon">🍟</span> Porções
+                </button>
+                <button class="category-btn" data-category="peixes-carnes">
+                    <span class="btn-icon">🥩</span> Carnes & Peixes
+                </button>
+                <button class="category-btn" data-category="drinks">
+                    <span class="btn-icon">🍹</span> Drinks
+                </button>
+                <button class="category-btn" data-category="cervejas">
+                    <span class="btn-icon">🍻</span> Cervejas
+                </button>
+                <button class="category-btn" data-category="combos">
+                    <span class="btn-icon">🍾</span> Combos
+                </button>
+                <button class="category-btn" data-category="bebidas">
+                    <span class="btn-icon">🥤</span> Sem Álcool
+                </button>
+            </div>
+        </nav>
+
+        <!-- Menu List -->
+        <main class="menu-main">
+            <section class="products-section">
+                <div class="section-title">
+                    <h3 id="categoryTitle">Cardápio Completo</h3>
+                    <span class="badge" id="productCount">0 itens</span>
+                </div>
+                <div class="products-grid" id="productsGrid">
+                    <!-- Cards de Produtos inseridos via JS -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer / Cart Indicator (Simulador de Valor Total) -->
+        <div class="bottom-action-bar" id="cartBar">
+            <div class="cart-info">
+                <div class="cart-icon-wrapper">
+                    <i class="fa-solid fa-calculator"></i>
+                    <span class="cart-badge-count" id="cartBadgeCount">0</span>
+                </div>
+                <div class="cart-price-wrapper">
+                    <span class="cart-label">Valor Estimado</span>
+                    <span class="cart-total" id="cartTotal">R$ 0,00</span>
+                </div>
+            </div>
+            <button class="view-cart-btn" id="openCartBtn">
+                Ver Itens <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <!-- Cart Drawer/Modal (Gaveta de Simulação Simplificada) -->
+        <div class="cart-drawer-overlay" id="cartDrawerOverlay"></div>
+        <div class="cart-drawer" id="cartDrawer">
+            <div class="drawer-header">
+                <h3><i class="fa-solid fa-calculator text-gold"></i> Simulação de Consumo</h3>
+                <button class="close-drawer-btn" id="closeCartBtn">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="drawer-body">
+                <div class="cart-items-list" id="cartItemsList">
+                    <!-- Itens do carrinho inseridos via JS -->
+                </div>
+                <div class="cart-summary">
+                    <div class="summary-line">
+                        <span>Consumo dos Itens</span>
+                        <span id="drawerSubtotal">R$ 0,00</span>
+                    </div>
+                    <div class="summary-line fee">
+                        <span>Taxa de Serviço (10% opcional)</span>
+                        <span id="drawerFee">R$ 0,00</span>
+                    </div>
+                    <div class="summary-line total">
+                        <span>Total Estimado</span>
+                        <span id="drawerTotal">R$ 0,00</span>
+                    </div>
+                </div>
+            </div>
+            <div class="drawer-footer" style="padding: 20px; background: #0a090c;">
+                <p class="helper-text" style="font-size: 0.8rem; color: #a09fa6; text-align: center; margin-bottom: 12px; line-height: 1.4;">
+                    <i class="fa-solid fa-circle-info text-gold"></i> Este é apenas um rascunho para você saber quanto vai ficar. Faça o pedido diretamente ao garçom da casa!
+                </p>
+                <button class="btn-primary w-full" id="closeDrawerFooterBtn" style="width: 100%;">
+                    Voltar ao Cardápio
+                </button>
+            </div>
+        </div>
+
+        <!-- Rodapé do Catálogo com link do Instagram -->
+        <footer class="catalog-footer" style="padding: 40px 20px 20px 20px; text-align: center; border-top: 1px solid rgba(255,255,255,0.03); margin-top: 40px;">
+            <a href="https://www.instagram.com/zechoppnovoprogresso/" target="_blank" style="color: var(--gold); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.95rem; margin-bottom: 12px; transition: var(--transition-smooth);" onmouseover="this.style.color='#ffffff';" onmouseout="this.style.color='var(--gold)';">
+                <i class="fa-brands fa-instagram" style="font-size: 1.25rem;"></i> @zechoppnovoprogresso
+            </a>
+            <p style="color: #72707a; font-size: 0.75rem; letter-spacing: 0.5px;">ZÉ CHOPP NOVO PROGRESSO • © 2026</p>
+        </footer>
+    </div>
+
+    <!-- JS Scripts -->
+    <!-- Supabase SDK JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
