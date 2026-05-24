@@ -51,6 +51,9 @@ const productCategory = document.getElementById("productCategory");
 const productTags = document.getElementById("productTags");
 const productImage = document.getElementById("productImage");
 const imagePreview = document.getElementById("imagePreview");
+const productImageFile = document.getElementById("productImageFile");
+const uploadTriggerArea = document.getElementById("uploadTriggerArea");
+const uploadText = document.getElementById("uploadText");
 const productDescription = document.getElementById("productDescription");
 const btnCloseProductModal = document.getElementById("btnCloseProductModal");
 const btnCancelProductModal = document.getElementById("btnCancelProductModal");
@@ -452,6 +455,14 @@ window.openEditModal = function(productId) {
     // Preview de Imagem
     imagePreview.src = product.image_url || product.image || 'https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7?auto=format&fit=crop&q=80&w=150';
 
+    // Reset da área de upload para edição
+    if (product.image_url && product.image_url.startsWith('data:image')) {
+        uploadText.textContent = "📸 Foto local já carregada (Base64). Clique para alterar.";
+    } else {
+        uploadText.textContent = "Clique ou toque para carregar foto do celular ou computador";
+    }
+    productImageFile.value = "";
+
     modalTitle.textContent = "Editar Produto";
     productModalOverlay.classList.add("active");
     productModal.classList.add("active");
@@ -472,6 +483,8 @@ function openAddModal() {
     productForm.reset();
     productIdInput.value = "";
     imagePreview.src = 'https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7?auto=format&fit=crop&q=80&w=150';
+    uploadText.textContent = "Clique ou toque para carregar foto do celular ou computador";
+    productImageFile.value = "";
     modalTitle.textContent = "Adicionar Novo Produto";
     
     productModalOverlay.classList.add("active");
@@ -541,6 +554,72 @@ function setupEventListeners() {
     productImage.addEventListener("input", (e) => {
         const val = e.target.value.trim();
         imagePreview.src = val || 'https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7?auto=format&fit=crop&q=80&w=150';
+        
+        // Limpa seletor se o usuário digitar URL manualmente
+        if (val && !val.startsWith('data:image')) {
+            uploadText.textContent = "Clique ou toque para carregar foto do celular ou computador";
+            productImageFile.value = "";
+        }
+    });
+
+    // Acionar seletor de arquivo local ao clicar na área tracejada
+    uploadTriggerArea.addEventListener("click", () => {
+        productImageFile.click();
+    });
+
+    // Processar arquivo de imagem local e converter em Base64
+    productImageFile.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // Limita o tamanho em 1.5MB para evitar estouro de string de banco de dados
+        if (file.size > 1.5 * 1024 * 1024) {
+            alert("A foto selecionada é muito grande! Escolha uma imagem de até 1.5MB.");
+            productImageFile.value = "";
+            return;
+        }
+
+        const reader = new FileReader();
+        uploadText.textContent = "Carregando imagem...";
+
+        reader.onload = (event) => {
+            const base64String = event.target.result;
+            productImage.value = base64String;
+            imagePreview.src = base64String;
+            uploadText.textContent = `📸 Foto: ${file.name}`;
+            triggerHapticFeedback();
+        };
+
+        reader.onerror = (err) => {
+            console.error("Erro ao ler arquivo:", err);
+            uploadText.textContent = "Erro ao carregar arquivo. Tente novamente.";
+        };
+
+        reader.readAsDataURL(file);
+    });
+
+    // Suporte a Drag & Drop de arquivos
+    uploadTriggerArea.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        uploadTriggerArea.classList.add("dragover");
+    });
+
+    uploadTriggerArea.addEventListener("dragleave", () => {
+        uploadTriggerArea.classList.remove("dragover");
+    });
+
+    uploadTriggerArea.addEventListener("drop", (e) => {
+        e.preventDefault();
+        uploadTriggerArea.classList.remove("dragover");
+        
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith("image/")) {
+            productImageFile.files = e.dataTransfer.files;
+            
+            // Dispara o evento de change
+            const event = new Event("change");
+            productImageFile.dispatchEvent(event);
+        }
     });
 
     // Modal Exclusão

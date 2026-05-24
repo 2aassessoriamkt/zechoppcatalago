@@ -785,3 +785,90 @@ input:checked + .slider:before {
         align-self: flex-end;
     }
 }
+
+/* --- UPLOAD DE IMAGEM PREMIUM --- */
+.image-upload-container {
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.upload-trigger-area {
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.01);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.upload-trigger-area:hover {
+    border-color: var(--gold);
+    background: rgba(245, 166, 35, 0.03);
+    box-shadow: 0 0 15px rgba(245, 166, 35, 0.08);
+}
+
+.upload-trigger-area.dragover {
+    border-color: var(--green-success);
+    background: rgba(46, 204, 113, 0.05);
+}
+
+.upload-icon {
+    font-size: 1.8rem;
+    color: #a09fa6;
+    transition: var(--transition-smooth);
+}
+
+.upload-trigger-area:hover .upload-icon {
+    color: var(--gold);
+    transform: translateY(-2px);
+}
+
+.upload-trigger-area span {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #b0afb6;
+}
+
+.upload-trigger-area .file-name-display {
+    font-size: 0.85rem;
+    color: var(--green-success);
+    font-weight: 700;
+}
+
+.image-input-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #52505a;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.image-input-divider::before,
+.image-input-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.image-input-divider:not(:empty)::before {
+    margin-right: .5em;
+}
+
+.image-input-divider:not(:empty)::after {
+    margin-left: .5em;
+}
+
