@@ -283,7 +283,7 @@ function renderAdminTable() {
 
         tr.innerHTML = `
             <td>
-                <img class="table-img" src="${product.image_url || product.image || 'https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7?auto=format&fit=crop&q=80&w=150'}" alt="${product.name}" onerror="this.src='https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7?auto=format&fit=crop&q=80&w=150';">
+                <img class="table-img" src="${product.image_url || product.image || 'https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7?auto=format&fit=crop&q=80&w=150'}" alt="${product.name}" loading="lazy" decoding="async" onerror="this.src='https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7?auto=format&fit=crop&q=80&w=150';">
             </td>
             <td>
                 <span class="table-product-name">${product.name}</span>

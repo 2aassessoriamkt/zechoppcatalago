@@ -821,18 +821,23 @@ input:checked + .slider:before {
         grid-template-rows: auto auto;
         gap: 8px 12px;
         padding: 16px;
-        background: rgba(22, 19, 27, 0.65);
+        background: #16131b; /* Fundo sólido para otimizar 100% o desempenho do mobile */
         border: 1px solid var(--border-color);
         border-radius: var(--radius-md);
         margin-bottom: 14px;
-        backdrop-filter: blur(10px);
-        transition: var(--transition-smooth);
+        transition: transform 0.15s ease, border-color 0.15s ease;
         width: 100%;
     }
 
     .admin-table tbody tr:hover {
-        background: rgba(30, 26, 37, 0.85);
+        background: #16131b;
+        border-color: var(--border-color);
+    }
+
+    .admin-table tbody tr:active {
+        background: rgba(30, 26, 37, 0.95);
         border-color: var(--border-color-active);
+        transform: scale(0.98); /* Feedback tátil de clique instantâneo e responsivo */
     }
 
     .admin-table td {
@@ -947,6 +952,14 @@ input:checked + .slider:before {
         width: 100%;
         justify-content: center;
         height: 44px;
+    }
+
+    /* Aumenta inputs e evita o zoom automático no iOS/Android */
+    .product-form input, 
+    .product-form select, 
+    .product-form textarea {
+        font-size: 16px !important;
+        padding: 12px 14px;
     }
 }
 
