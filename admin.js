@@ -562,35 +562,25 @@ function setupEventListeners() {
         productImageFile.click();
     });
 
-    // Processar arquivo de imagem local e converter em Base64
+    // Processar arquivo de imagem local e converter em Base64 comprimido client-side
     productImageFile.addEventListener("change", (e) => {
         const file = e.target.files[0];
         if (!file) return;
 
-        // Limita o tamanho em 1.5MB para evitar estouro de string de banco de dados
-        if (file.size > 1.5 * 1024 * 1024) {
-            alert("A foto selecionada é muito grande! Escolha uma imagem de até 1.5MB.");
-            productImageFile.value = "";
-            return;
-        }
+        uploadText.textContent = "Comprimindo e otimizando foto...";
 
-        const reader = new FileReader();
-        uploadText.textContent = "Carregando imagem...";
+        compressImage(file, (err, base64String) => {
+            if (err) {
+                console.error("Erro ao comprimir imagem:", err);
+                uploadText.textContent = "Erro ao carregar arquivo. Tente novamente.";
+                return;
+            }
 
-        reader.onload = (event) => {
-            const base64String = event.target.result;
             productImage.value = base64String;
             imagePreview.src = base64String;
-            uploadText.textContent = `📸 Foto: ${file.name}`;
+            uploadText.textContent = `📸 Foto: ${file.name} (Otimizada)`;
             triggerHapticFeedback();
-        };
-
-        reader.onerror = (err) => {
-            console.error("Erro ao ler arquivo:", err);
-            uploadText.textContent = "Erro ao carregar arquivo. Tente novamente.";
-        };
-
-        reader.readAsDataURL(file);
+        });
     });
 
     // Suporte a Drag & Drop de arquivos
@@ -628,4 +618,51 @@ function triggerHapticFeedback() {
     if (window.navigator && window.navigator.vibrate) {
         window.navigator.vibrate(40);
     }
+}
+
+// Comprime e redimensiona a foto no próprio celular/computador antes de enviar ao Supabase
+function compressImage(file, callback) {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+            const canvas = document.createElement("canvas");
+            let width = img.width;
+            let height = img.height;
+
+            // Define limite máximo de dimensão (ex: 800px)
+            const MAX_WIDTH = 800;
+            const MAX_HEIGHT = 800;
+
+            if (width > height) {
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width;
+                    width = MAX_WIDTH;
+                }
+            } else {
+                if (height > MAX_HEIGHT) {
+                    width *= MAX_HEIGHT / height;
+                    height = MAX_HEIGHT;
+                }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // Exporta como JPEG com 70% de qualidade (extremamente leve e com boa nitidez)
+            const dataUrl = canvas.toDataURL("image/jpeg", 0.7);
+            callback(null, dataUrl);
+        };
+        img.onerror = (err) => {
+            callback(err);
+        };
+        img.src = event.target.result;
+    };
+    reader.onerror = (err) => {
+        callback(err);
+    };
+    reader.readAsDataURL(file);
 }
