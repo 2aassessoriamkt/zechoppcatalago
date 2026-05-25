@@ -2,7 +2,8 @@
    🍺 ZÉ CHOPP - CARDÁPIO DIGITAL & SIMULADOR DE CONTA (JS DINÂMICO SUPABASE)
    ========================================================================== */
 
-// --- 1. BANCO DE DADOS DE FALLBACK OFFLINE (STATIC MOCK DATAconst STATIC_PRODUCTS = [
+// --- 1. BANCO DE DADOS DE FALLBACK OFFLINE (STATIC MOCK DATA)
+const STATIC_PRODUCTS = [
     // === CATEGORIA: CHOPPS ===
     { id: "chopp-brahma", name: "Chopp Brahma", price: 13.90, description: "O clássico número um. Chopp Brahma claro, leve e refrescante, servido em caneca trincando de gelada com colarinho super cremoso.", image: "assets/chopp_premium.png", category: "chopps", tags: [] },
     { id: "chopp-pantanal", name: "Chopp Pilsen Pantanal", price: 11.90, description: "Direto da torneira! Chopp Pilsen regional leve, suave e estupidamente gelado. Perfeito para o happy hour sob o calor de Novo Progresso.", image: "assets/chopp_premium.png", category: "chopps", tags: [] },
@@ -48,10 +49,6 @@
     { id: "combo-vodka", name: "Combo de Vodka (Ciroc, Absolut, Smirnoff ou Kislla)", price: 229.00, description: "1 Garrafa de Vodka Importada ou Nacional à sua escolha (Ciroc, Absolut, Smirnoff ou Kislla) + 4 Energéticos + Balde de gelo.", image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=400", category: "combos", tags: [] },
     { id: "combo-campari", name: "Combo de Campari", price: 199.00, description: "1 Garrafa de Campari (1 Litro) + 4 latas de água tônica ou soda limonada + Fatias frescas de laranja + Balde de gelo.", image: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&q=80&w=400", category: "combos", tags: [] },
     { id: "combo-tequila", name: "Combo de Tequila", price: 249.00, description: "1 Garrafa de Tequila mexicana Jose Cuervo Especial Gold + Fatias de limão fresco + Sal em copinho + Copos de shot.", image: "https://images.unsplash.com/photo-1516535794938-6063878f08cc?auto=format&fit=crop&q=80&w=400", category: "combos", tags: [] }
-];ges.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&q=80&w=400",
-        category: "bebidas",
-        tags: ["Refrescante"]
-    }
 ];
 
 // --- 2. ESTADO DA APLICAÇÃO (DINÂMICO E REATIVO) ---
